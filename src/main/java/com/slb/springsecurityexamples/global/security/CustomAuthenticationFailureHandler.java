@@ -17,6 +17,6 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"존재하지 않는 회원 정보입니다\"}");
+        response.getWriter().write("존재하지 않는 회원 정보입니다");
     }
 }
