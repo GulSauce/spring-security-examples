@@ -18,10 +18,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService,
+                          CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
+                          CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
         this.customUserDetailsService = customUserDetailsService;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
         this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
     }
 
@@ -45,6 +49,7 @@ public class SecurityConfig {
                     .usernameParameter("username") // 아이디 필드 이름 (기본값: username)
                     .passwordParameter("password") // 비밀번호 필드 이름 (기본값: password)
                     .permitAll() // 로그인 페이지 접근은 누구나 가능
+                    .successHandler(customAuthenticationSuccessHandler) // 성공 핸들러 등록
                     .failureHandler(customAuthenticationFailureHandler)  // 로그인 실패 핸들러 설정
             )
 
@@ -54,6 +59,7 @@ public class SecurityConfig {
                     .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 URL
                     .invalidateHttpSession(true) // 세션 무효화
                     .deleteCookies("JSESSIONID") // 특정 쿠키 삭제
+                    .deleteCookies("USERNAME") // 특정 쿠키 삭제
             )
             // AuthenticationProvider 설정
             .authenticationProvider(authenticationProvider());
